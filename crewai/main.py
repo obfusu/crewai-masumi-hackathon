@@ -66,6 +66,9 @@ class StartJobRequest(BaseModel):
 class ProvideInputRequest(BaseModel):
     job_id: str
 
+class InputRequest(BaseModel):
+    input_data: dict[str, str]
+
 # ─────────────────────────────────────────────────────────────────────────────
 # CrewAI Task Execution
 # ─────────────────────────────────────────────────────────────────────────────
@@ -82,7 +85,7 @@ async def execute_crew_task(input_data: str) -> str:
 # 1) Start Job (MIP-003: /start_job)
 # ─────────────────────────────────────────────────────────────────────────────
 @app.post("/start_job")
-async def start_job(data: StartJobRequest):
+async def start_job(data: InputRequest):
     """ Initiates a job and creates a payment request """
     print(f"Received data: {data}")
     print(f"Received data.input_data: {data.input_data}")
@@ -92,8 +95,11 @@ async def start_job(data: StartJobRequest):
         
         # Log the input text (truncate if too long)
         input_text = data.input_data["text"]
-        truncated_input = input_text[:100] + "..." if len(input_text) > 100 else input_text
-        logger.info(f"Received job request with input: '{truncated_input}'")
+        print(f"Received data.input_data: {input_text}")
+
+        truncated_input = input_text
+        # truncated_input = input_text[:100] + "..." if len(input_text) > 100 else input_text
+        logger.info(f"Received job request with input: {truncated_input}")
         logger.info(f"Starting job {job_id} with agent {agent_identifier}")
 
         # Define payment amounts
@@ -106,7 +112,7 @@ async def start_job(data: StartJobRequest):
         # Create a payment request using Masumi
         payment = Payment(
             agent_identifier=agent_identifier,
-            #amounts=amounts,
+            amounts=amounts,
             config=config,
             identifier_from_purchaser=data.identifier_from_purchaser,
             input_data=data.input_data,
@@ -147,7 +153,7 @@ async def start_job(data: StartJobRequest):
             "externalDisputeUnlockTime": payment_request["data"]["externalDisputeUnlockTime"],
             "agentIdentifier": agent_identifier,
             "sellerVKey": os.getenv("SELLER_VKEY"),
-            "identifierFromPurchaser": data.identifier_from_purchaser,
+            "identifierFromPurchaser": "sample",
             "amounts": amounts,
             "input_hash": payment.input_hash,
             "payByTime": payment_request["data"]["payByTime"],
@@ -273,16 +279,14 @@ async def input_schema():
     return {
         "input_data": [
             {
-                "id": "inputFile",
-                "type": "file",
-                "name": "Invoice Upload",
+                "id": "text",
+                "type": "string",
+                "name": "Task Description",
                 "data": {
-                    "accept": ".pdf",
-                    "description": "PDF Only",
-                    "maxSize": "10240",
-                    "outputFormat": "base64"
+                    "description": "The text input for the AI task",
+                    "placeholder": "Enter your task description here"
                 }
-            },
+            }
         ]
     }
 

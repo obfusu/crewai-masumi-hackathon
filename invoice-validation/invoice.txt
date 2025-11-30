@@ -1,0 +1,34 @@
+SuperStore
+
+Bill To: Michael Nguyen
+
+Ship To: Hefei, Anhui, China
+
+Item
+Eldon File Cart, Single Width Storage, Office Supplies, OFF-ST-4057
+
+Notes: Thanks for your business!
+Terms: Order ID : IN-2012-MN1793527-41152
+
+INVOICE
+# 27371
+
+Date: Ship Mode:
+Balance Due:
+
+Aug 31 2012 Standard Class
+$4,707.41
+
+Quantity 6
+
+Rate $767.52
+
+Amount $4,605.12
+
+Subtotal: Shipping:
+Total:
+
+$4,605.12 $102.29
+$4,707.41
+
+
